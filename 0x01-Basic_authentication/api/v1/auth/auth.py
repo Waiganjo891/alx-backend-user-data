@@ -13,7 +13,6 @@ class Auth:
     """
     Auth class to manage API authentication
     """
-
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         Method to determine if authentication is required
@@ -31,7 +30,10 @@ class Auth:
         if not path.endswith('/'):
             path += '/'
         for excluded_path in excluded_paths:
-            if excluded_path.endswith('/') and path == excluded_path:
+            if excluded_path.endswith('*'):
+                if path.startswith(excluded_path[:-1]):
+                    return False
+            elif excluded_path.endswith('/') and path == excluded_path:
                 return False
         return True
 
